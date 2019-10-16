@@ -1,17 +1,18 @@
 {
-    "name": "dom-to-image-more",
+    "name": "dom-to-image-improved",
     "version": "2.8.0",
-    "homepage": "https://github.com/1904labs/dom-to-image-more",
+    "homepage": "https://github.com/mcklayin/dom-to-image-improved",
     "authors": [
         "Marc Brooks <idisposable@gmail.com>",
         "Daniel Fischer <daniel.fischer@iqdoq.de>",
         "Anatolii Saienko <anatoly.sayenko@gmail.com>",
         "Aidas Klimas",
         "Edgardo Di Gesto",
-        "樊冬 Fan Dong <CG-man@outlook.com>"
+        "樊冬 Fan Dong <CG-man@outlook.com>",
+        "Dmytro Pidhaiko <mcklayin@gmail.com>"
     ],
     "description": "Generates an image from a DOM node using HTML5 canvas and SVG",
-    "main": "src/dom-to-image-more.js",
+    "main": "src/dom-to-image-improved.js",
     "moduleType": [
         "globals"
     ],

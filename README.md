@@ -1,45 +1,46 @@
 # DOM to Image
 
-[![Build Status](https://travis-ci.org/1904labs/dom-to-image-more.svg?branch=master)](https://travis-ci.org/1904labs/dom-to-image-more)
+[![Build Status](https://travis-ci.org/1904labs/dom-to-image-improved.svg?branch=master)](https://travis-ci.org/1904labs/dom-to-image-improved)
 
 ## What is it
 
-**dom-to-image-more** is a library which can turn arbitrary DOM node into
+**dom-to-image-improved** is a library which can turn arbitrary DOM node into
 a vector (SVG) or raster (PNG or JPEG) image, written in JavaScript.
 
-This fork of [dom-to-image by Anatolii Saienko (tsayen)](https://github.com/tsayen/dom-to-image)
+This fork of [dom-to-image-improved by Marc Brooks (1904labs)](https://github.com/1904labs/dom-to-image-improved)
+with some important fixes merged. We are eternally grateful for his starting point.
+
+Based on [dom-to-image by Anatolii Saienko (tsayen)](https://github.com/tsayen/dom-to-image)
 with some important fixes merged. We are eternally grateful for his starting point.
 
 Anatolii's version was based on [domvas by Paul Bakaus](https://github.com/pbakaus/domvas)
 and has been completely rewritten, with some bugs fixed and some new
 features (like web font and image support) added.
 
-Moved to [1904labs organization](https://github.com/1904labs/) from my repositories 2019-02-06 as of version 2.7.3
-
 ## Installation
 
 ### NPM
 
-`npm install dom-to-image-more`
+`npm install dom-to-image-improved`
 
 Then load
 
 ```javascript
 /* in ES 6 */
-import domtoimage from 'dom-to-image-more';
+import domtoimage from 'dom-to-image-improved';
 /* in ES 5 */
-var domtoimage = require('dom-to-image-more');
+var domtoimage = require('dom-to-image-improved');
 ```
 
 ### Bower
 
-`bower install dom-to-image-more`
+`bower install dom-to-image-improved`
 
-Include either `src/dom-to-image-more.js` or `dist/dom-to-image-more.min.js` in your page
+Include either `src/dom-to-image-improved.js` or `dist/dom-to-image-improved.min.js` in your page
 and it will make the `domtoimage` variable available in the global scope.
 
 ```html
-<script src="path/to/dom-to-image-more.min.js" />
+<script src="path/to/dom-to-image-improved.min.js" />
 <script>
   domtoimage.toPng(node)
   //...
@@ -146,6 +147,16 @@ children as well). Not called on the root node.
 #### bgcolor
 
 A string value for the background color, any valid CSS color value.
+
+#### scale
+
+A number for image scaling
+
+#### canvas
+
+Canvas drawImage options: width, height, sx, sy, sw, sh, dx, dy, dw, dh.
+Width & height influence on image result.
+Can be used to change image size or crop.
 
 #### height, width
 
@@ -262,7 +273,7 @@ for you, following steps are taken:
 
 ## Authors
 
-Marc Brooks, Anatolii Saienko (original dom-to-image), Paul Bakaus (original idea),
+Dmytro Pidhaiko, Marc Brooks(dom-to-image-more), Anatolii Saienko (original dom-to-image), Paul Bakaus (original idea),
 Aidas Klimas (fixes), Edgardo Di Gesto (fixes), 樊冬 Fan Dong (fixes)
 
 ## License

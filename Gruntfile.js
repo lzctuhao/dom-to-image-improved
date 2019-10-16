@@ -21,7 +21,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    'dist/<%= pkg.name %>.min.js': ['src/dom-to-image-more.js']
+                    'dist/<%= pkg.name %>.min.js': ['src/dom-to-image-improved.js']
                 }
             }
         },
