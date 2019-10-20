@@ -172,6 +172,7 @@
         .then(util.delay(100))
         .then(function(image) {
             var scale = typeof(options.scale) !== 'number' ? 1 : options.scale;
+            console.log('scale', scale);
             var canvas = newCanvas(domNode, scale);
             var ctx = canvas.getContext('2d');
             if (image) {
@@ -281,13 +282,19 @@
             function cloneStyle() {
                 copyStyle(window.getComputedStyle(original), clone.style);
 
-                if (util.isChrome() && clone.style.marker && ( clone.tagName === 'line' || clone.tagName === 'path')) {
+                if ((util.isChrome() || util.isSafari() ) && clone.style.marker && ( clone.tagName === 'line' || clone.tagName === 'path')) {
                     clone.style.marker = '';
                 }
 
                 function copyStyle(source, target) {
                     if (source.cssText) {
                         target.cssText = source.cssText;
+
+                        // Fix strange box-shadow in Safari
+                        if (util.isSafari()) {
+                            target.cssText = target.cssText.replace(/box-shadow(.*?);/, 'box-shadow: none!important;');
+                        }
+
                         target.font = source.font; // here, we re-assign the font prop.
                     } else copyProperties(source, target);
 
@@ -420,6 +427,7 @@
             delay: delay,
             asArray: asArray,
             isChrome: isChrome,
+            isSafari: isSafari,
             escapeXhtml: escapeXhtml,
             makeImage: makeImage,
             width: width,
@@ -602,6 +610,11 @@
         function isChrome() {
             return /chrome/i.test( navigator.userAgent );
         }
+
+        function isSafari() {
+            return /safari/i.test( navigator.userAgent );
+        }
+
 
         function delay(ms) {
             return function(arg) {
