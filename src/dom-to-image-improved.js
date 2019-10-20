@@ -172,18 +172,10 @@
         .then(util.delay(100))
         .then(function(image) {
             var scale = typeof(options.scale) !== 'number' ? 1 : options.scale;
-            console.log('scale', scale);
             var canvas = newCanvas(domNode, scale);
             var ctx = canvas.getContext('2d');
             if (image) {
-                //console.log('should be scaled', image);
                 ctx.scale(scale, scale);
-                //canvas.height = 620;
-                //ctx.drawImage(image, 150, 600, 1150, 700, 0, 0, 1150, 700);
-                // canvas.height = options.image.height + 50;
-                // //canvas.width = options.image.width - 135;// - options.image.offsetRight
-                // canvas.width = options.image.width - options.image.offsetRight - options.image.offsetLeft + 60;
-                // ctx.drawImage(image, options.image.offsetLeft, options.image.offsetTop - 50, options.image.width, options.image.height + 50, 0, 0, options.image.width, options.image.height);
 
                 if (options.canvas && options.canvas.width) {
                     canvas.width = options.canvas.width;
@@ -194,7 +186,6 @@
                 }
 
                 if (options.canvas) {
-                    console.log('canv', options.canvas);
                     ctx.drawImage(
                       image,
                       options.canvas.sx  || 0,
@@ -218,8 +209,6 @@
             var canvas = document.createElement('canvas');
             canvas.width = (options.width || util.width(domNode)) * scale;
             canvas.height = (options.height || util.height(domNode)) * scale;
-
-            console.log(canvas.width, canvas.height);
 
             if (options.bgcolor) {
                 var ctx = canvas.getContext('2d');
@@ -292,7 +281,7 @@
             function cloneStyle() {
                 copyStyle(window.getComputedStyle(original), clone.style);
 
-                if ((util.isChrome() || util.isSafari() ) && clone.style.marker && ( clone.tagName === 'line' || clone.tagName === 'path')) {
+                if (util.isChrome() && clone.style.marker && ( clone.tagName === 'line' || clone.tagName === 'path')) {
                     clone.style.marker = '';
                 }
 
@@ -431,7 +420,6 @@
             delay: delay,
             asArray: asArray,
             isChrome: isChrome,
-            isSafari: isSafari,
             escapeXhtml: escapeXhtml,
             makeImage: makeImage,
             width: width,
@@ -614,11 +602,6 @@
         function isChrome() {
             return /chrome/i.test( navigator.userAgent );
         }
-
-        function isSafari() {
-            return /safari/i.test( navigator.userAgent );
-        }
-
 
         function delay(ms) {
             return function(arg) {
