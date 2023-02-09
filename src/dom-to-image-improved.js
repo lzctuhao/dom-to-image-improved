@@ -5,6 +5,7 @@
     var inliner = newInliner();
     var fontFaces = newFontFaces();
     var images = newImages();
+    var used_web_font=new Set();
 
     // Default impl options
     var defaultOptions = {
@@ -43,6 +44,7 @@
      * @param {Function} options.filter - Should return true if passed node should be included in the output
      *          (excluding node means excluding it's children as well). Not called on the root node.
      * @param {String} options.bgcolor - color for the background, any valid CSS color value.
+     * @param {String} options.only_style - part of path of the only css of rendered dom (will only find this css)
      * @param {Number} options.width - width to be applied to node before rendering.
      * @param {Number} options.height - height to be applied to node before rendering.
      * @param {Object} options.style - an object whose properties to be copied to node's style before rendering.
@@ -164,15 +166,20 @@
         } else {
             domtoimage.impl.options.useCredentials = options.useCredentials;
         }
+
+        if(typeof(options.only_style) != 'undefined') {
+            domtoimage.impl.options.only_style = options.only_style;
+        }
     }
 
     function draw(domNode, options) {
+        used_web_font.clear();
         return toSvg(domNode, options)
         .then(util.makeImage)
         .then(util.delay(100))
         .then(function(image) {
             var scale = typeof(options.scale) !== 'number' ? 1 : options.scale;
-            console.log('scale', scale);
+            /*console.log('scale', scale);*/
             var canvas = newCanvas(domNode, scale);
             var ctx = canvas.getContext('2d');
             if (image) {
@@ -292,7 +299,7 @@
 
                         // Fix strange box-shadow in Safari
                         if (util.isSafari()) {
-                            target.cssText = target.cssText.replace(/box-shadow(.*?);/, 'box-shadow: none!important;');
+                            target.cssText = target.cssText.replace(/box-shadow(.*?);/, 'box-shadow:none!important;');
                         }
 
                         target.font = source.font; // here, we re-assign the font prop.
@@ -300,10 +307,15 @@
 
                     function copyProperties(source, target) {
                         util.asArray(source).forEach(function(name) {
+                            if(name=="font-family"){
+                                source.getPropertyValue(name).replace(/[ \"\']/g,"").split(",").forEach(function(fontName){
+                                    used_web_font.add(fontName);
+                                })
+                            }
                             target.setProperty(
-                              name,
-                              source.getPropertyValue(name),
-                              source.getPropertyPriority(name)
+                                name,
+                                source.getPropertyValue(name),
+                                source.getPropertyPriority(name)
                             );
                         });
                     }
@@ -762,15 +774,18 @@
             }
 
             function getCssRules(styleSheets) {
+                let only_style=typeof(domtoimage.impl.options.only_style)=== 'undefined' ? false : domtoimage.impl.options.only_style;
                 var cssRules = [];
                 styleSheets.forEach(function(sheet) {
-                    if (Object.getPrototypeOf(sheet).hasOwnProperty("cssRules")) {
-                        try {
-                            util.asArray(sheet.cssRules || []).forEach(cssRules.push.bind(cssRules));
-                        } catch (e) {
-                            console.log('Error while reading CSS rules from ' + sheet.href, e.toString());
+                    if( (only_style && sheet.href && sheet.href.indexOf(only_style)>-1) || (!only_style)){
+                        if (Object.getPrototypeOf(sheet).hasOwnProperty("cssRules")) {
+                            try {
+                                util.asArray(sheet.cssRules || []).forEach(cssRules.push.bind(cssRules));
+                            } catch (e) {
+                                console.warn('Error while reading CSS rules from ' + sheet.href, e.toString());
+                            }
                         }
-                    }
+                    } /*else console.log(`Skipped css with url ${sheet.href}`)*/
                 });
                 return cssRules;
             }
@@ -779,7 +794,11 @@
                 return {
                     resolve: function resolve() {
                         var baseUrl = (webFontRule.parentStyleSheet || {}).href;
-                        return inliner.inlineAll(webFontRule.cssText, baseUrl);
+                        /* Only inline USED webfont */
+                        if ( used_web_font.has(webFontRule.style.fontFamily) ){
+                            return inliner.inlineAll(webFontRule.cssText, baseUrl);
+                        }
+                        return Promise.resolve("");
                     },
                     src: function() {
                         return webFontRule.style.getPropertyValue('src');
