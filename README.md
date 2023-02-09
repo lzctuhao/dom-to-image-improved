@@ -181,6 +181,10 @@ Set to true to append the current time as a query string to URL requests to enab
 
 A data URL for a placeholder image that will be used when fetching an image fails. Defaults to undefined and will throw an error on failed images
 
+#### only_style
+
+Part of URL of the only css of the rendered dom (will only traverse this css). E.g. `/css/result-dom.css`
+
 ## Browsers
 
 It's tested on latest Chrome and Firefox (49 and 45 respectively at the time
@@ -191,7 +195,7 @@ possibly due to it's more performant SVG support, and the fact that it supports
 _Internet Explorer is not (and will not be) supported, as it does not support
 SVG `<foreignObject>` tag_  
 
-_Safari [is not supported](https://github.com/tsayen/dom-to-image/issues/27), as it uses a stricter security model on `<foreignObject`> tag. Suggested workaround is to use `toSvg` and render on the server._`
+_Safari [is not supported](https://github.com/tsayen/dom-to-image/issues/27), as it uses a stricter security model on `<foreignObject`> tag. Suggested workaround is to use `toSvg` and render on the server._
 
 ## Dependencies
 
